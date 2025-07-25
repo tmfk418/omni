@@ -21,8 +21,16 @@
 \- 推荐使用 Linux + 多卡 GPU
 
 
+## **1.** 克隆本项目
 
-## **1.** 创建并激活环境、下载依赖和模型：
+在你希望存放的路径下执行：
+
+git clone https://github.com/tmfk418/omni.git
+
+cd omni
+
+
+## **2.** 创建并激活环境、下载依赖和模型：
 
 
 
@@ -32,7 +40,7 @@ conda activate omnicritic
 
 pip install -r requirements.txt
 
-cd omniR1-sft-master/ms-swift-main
+cd omni/ms-swift-main
 
 pip install -e .
 
@@ -57,19 +65,6 @@ model\_dir = snapshot\_download(
 &nbsp;   revision='master'
 
 )
-
-
-
-
-
-## **2.** 克隆本项目
-
-在你希望存放的路径下执行：
-
-git clone https://github.com/tmfk418/omni.git
-
-cd omni
-
 
 
 ## **3.** 数据准备
