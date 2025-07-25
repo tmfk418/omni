@@ -38,7 +38,7 @@ conda create -n omnicritic python=3.10 -y
 
 conda activate omnicritic
 
-pip install -r requirements.txt
+pip install -r requirements.txt（omnicritic文件夹下的）
 
 cd omni/ms-swift-main
 
