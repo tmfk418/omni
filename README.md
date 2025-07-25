@@ -1,4 +1,4 @@
-# OmniCritic-R1
+\# OmniCritic-R1
 
 
 
@@ -6,7 +6,7 @@
 
 
 
-## 🔧 环境准备
+\## 🔧 环境准备
 
 
 
@@ -14,15 +14,15 @@
 
 
 
-- Python >= 3.10
+\- Python >= 3.10
 
-- CUDA >= 11.8
+\- CUDA >= 11.8
 
-- 推荐使用 Linux + 多卡 GPU
+\- 推荐使用 Linux + 多卡 GPU
 
 
 
-1. 创建并激活环境、下载依赖和模型：
+\## 1. 创建并激活环境、下载依赖和模型：
 
 
 
@@ -44,17 +44,17 @@ pip install -e .
 
 以3b为例
 
-from modelscope.hub.snapshot_download import snapshot_download
+from modelscope.hub.snapshot\_download import snapshot\_download
 
 
 
-model_dir = snapshot_download(
+model\_dir = snapshot\_download(
 
-    'qwen/Qwen2.5-Omni-3B',
+&nbsp;   'qwen/Qwen2.5-Omni-3B',
 
-    cache_dir='./Qwen2.5-Omni-3B',  # ✅ 可指定本地路径
+&nbsp;   cache\_dir='./Qwen2.5-Omni-3B',  # ✅ 可指定本地路径
 
-    revision='master'
+&nbsp;   revision='master'
 
 )
 
@@ -62,7 +62,7 @@ model_dir = snapshot_download(
 
 
 
- 2. 克隆本项目
+\##2. 克隆本项目
 
 在你希望存放的路径下执行：
 
@@ -72,19 +72,19 @@ cd omni
 
 
 
-4. 数据准备
+\##3. 数据准备
 
 
 
-需要下载的数据集托管在 Hugging Face 上。可以使用 huggingface_hub 库进行下载。
+需要下载的数据集托管在 Hugging Face 上。可以使用 huggingface\_hub 库进行下载。
 
 
 
-安装 huggingface_hub 库：
+安装 huggingface\_hub 库：
 
 
 
-pip install huggingface_hub
+pip install huggingface\_hub
 
 
 
@@ -92,7 +92,7 @@ pip install huggingface_hub
 
 
 
-from huggingface_hub import hf_hub_download
+from huggingface\_hub import hf\_hub\_download
 
 
 
@@ -100,19 +100,19 @@ from huggingface_hub import hf_hub_download
 
 
 
-image_dataset = hf_hub_download("TMFK/omnir1-dataset", "rlaif-v-dataset.tar.gz")
+image\_dataset = hf\_hub\_download("TMFK/omnir1-dataset", "rlaif-v-dataset.tar.gz")
 
 
 
-video_dataset = hf_hub_download("TMFK/omnir1-dataset", "C:Userstmfk1videovideo.zip")
+video\_dataset = hf\_hub\_download("TMFK/omnir1-dataset", "C:\\Users\\tmfk1\\video\\video.zip")
 
 
 
-audio_dataset = hf_hub_download("TMFK/omnir1-dataset", "Clotho-AQA dataset.zip")
+audio\_dataset = hf\_hub\_download("TMFK/omnir1-dataset", "Clotho-AQA dataset.zip")
 
 
 
-5.更新sft和rl的数据集路径
+\##4.更新sft和rl的数据集路径
 
 运行以下脚本来更新音频和视频路径：
 
@@ -122,7 +122,7 @@ audio_dataset = hf_hub_download("TMFK/omnir1-dataset", "Clotho-AQA dataset.zip")
 
 
 
-python configs/change_path.py
+python configs/change\_path.py
 
 
 
@@ -132,265 +132,258 @@ python configs/change_path.py
 
 
 
-6. 运行sft代码
+\##5. 运行sft代码
 
-bash scripts/sft_3b.sh
+bash scripts/sft\_3b.sh
 
-bash scripts/sft_3b_lora.sh
+bash scripts/sft\_3b\_lora.sh
 
-bash scripts/sft_7b.sh
+bash scripts/sft\_7b.sh
 
-bash scripts/sft_7b_lora.sh
+bash scripts/sft\_7b\_lora.sh
 
 
 
 注意修改里面的所有路径
 
-以sft_3b.sh为例
+以sft\_3b.sh为例
+ ✅ 根据实际显卡数和资源配置修改
 
+export CUDA\_VISIBLE\_DEVICES=0,1,2,3        # ← ✅ 若用单卡或不同编号需修改
 
+✅ 可选项，根据任务需要设置（图像/视频/音频）
 
-# ✅ 根据实际显卡数和资源配置修改
-
-export CUDA_VISIBLE_DEVICES=0,1,2,3        # ← ✅ 若用单卡或不同编号需修改
-
-
-
-# ✅ 可选项，根据任务需要设置（图像/视频/音频）
-
-export MAX_PIXELS=262144
+export MAX\_PIXELS=262144
 
 export FPS=1
 
-export FPS_MAX_FRAMES=20
+export FPS\_MAX\_FRAMES=20
 
-export VIDEO_MAX_PIXELS=32768
+export VIDEO\_MAX\_PIXELS=32768
 
-export AUDIO_MEMMAP=true
+export AUDIO\_MEMMAP=true
 
-export AUDIO_CHUNK_SIZE=4000
+export AUDIO\_CHUNK\_SIZE=4000
 
-export AUDIO_NUM_WORKERS=4
+export AUDIO\_NUM\_WORKERS=4
 
-export VIDEO_READER_BACKEND=torchvision
+export VIDEO\_READER\_BACKEND=torchvision
 
-export TOKENIZERS_PARALLELISM=false
+export TOKENIZERS\_PARALLELISM=false
 
-export OMP_NUM_THREADS=1
+export OMP\_NUM\_THREADS=1
 
-export SWIFT_DEVICE_MAP=auto
+export SWIFT\_DEVICE\_MAP=auto
 
+✅ 启动训练主命令（根据模型、路径修改）
 
+torchrun --nproc\_per\_node=4 \\                        # ← ✅ 改为你的显卡数（如 1、2、4、8）
 
-# ✅ 启动训练主命令（根据模型、路径修改）
+&nbsp; /data/yiwei.ru/omniR1-sft-master/ms-swift-main/swift/cli/sft.py \\
 
-torchrun --nproc_per_node=4                         # ← ✅ 改为你的显卡数（如 1、2、4、8）
 
-  /data/yiwei.ru/omniR1-sft-master/ms-swift-main/swift/cli/sft.py 
 
+&nbsp; --do\_train \\
 
 
-  --do_train 
 
+&nbsp; # ✅ 模型路径：修改为你本地/远程的基座模型路径
 
+&nbsp; --model /data/yiwei.ru/modelscope/Qwen/Qwen2.5-Omni-3B \\        # ← ✅ 替换为你使用的模型路径
 
-  # ✅ 模型路径：修改为你本地/远程的基座模型路径
 
-  --model /data/yiwei.ru/modelscope/Qwen/Qwen2.5-Omni-3B         # ← ✅ 替换为你使用的模型路径
 
+&nbsp; # ✅ 数据集路径：使用你准备的数据集（建议绝对路径）
 
+&nbsp; --dataset \\
 
-  # ✅ 数据集路径：使用你准备的数据集（建议绝对路径）
+&nbsp;   /data/yiwei.ru/omniR1-sft-master/OmniCritic/sft\_dataset/audio/final\_sft\_data.jsonl \\
 
-  --dataset 
+&nbsp;   /data/yiwei.ru/omniR1-sft-master/OmniCritic/sft\_dataset/video/final\_sft\_data.jsonl \\
 
-    /data/yiwei.ru/omniR1-sft-master/OmniCritic/sft_dataset/audio/final_sft_data.jsonl 
+&nbsp;   /data/yiwei.ru/omniR1-sft-master/OmniCritic/sft\_dataset/image/final\_sft\_data.jsonl \\     # ← ✅ 替换为你准备的 jsonl 文件
 
-    /data/yiwei.ru/omniR1-sft-master/OmniCritic/sft_dataset/video/final_sft_data.jsonl 
 
-    /data/yiwei.ru/omniR1-sft-master/OmniCritic/sft_dataset/image/final_sft_data.jsonl      # ← ✅ 替换为你准备的 jsonl 文件
 
+&nbsp; --train\_type full \\                     
 
 
-  --train_type full                      
 
+&nbsp; # ✅ 输出路径：训练结果会保存在这里
 
+&nbsp; --output\_dir /data/yiwei.ru/omniR1-sft-master/OmniCritic/outputs \\   # ← ✅ 根据你想保存的位置修改
 
-  # ✅ 输出路径：训练结果会保存在这里
 
-  --output_dir /data/yiwei.ru/omniR1-sft-master/OmniCritic/outputs    # ← ✅ 根据你想保存的位置修改
 
+&nbsp; # ✅ 训练参数（辛苦根据实际情况调整）
 
+&nbsp; --num\_train\_epochs 2 \\
 
-  # ✅ 训练参数（辛苦根据实际情况调整）
+&nbsp; --per\_device\_train\_batch\_size 1 \\
 
-  --num_train_epochs 2 
+&nbsp; --per\_device\_eval\_batch\_size 1 \\
 
-  --per_device_train_batch_size 1 
+&nbsp; --gradient\_accumulation\_steps 12 \\
 
-  --per_device_eval_batch_size 1 
+&nbsp; --learning\_rate 5e-6 \\
 
-  --gradient_accumulation_steps 12 
+&nbsp; --warmup\_ratio 0.03 \\
 
-  --learning_rate 5e-6 
+&nbsp; --max\_length 3072 \\
 
-  --warmup_ratio 0.03 
+&nbsp; --eval\_steps 100 \\
 
-  --max_length 3072 
+&nbsp; --save\_steps 100 \\
 
-  --eval_steps 100 
+&nbsp; --save\_total\_limit 4 \\
 
-  --save_steps 100 
+&nbsp; --logging\_steps 5 \\
 
-  --save_total_limit 4 
+&nbsp; --dataloader\_num\_workers 2 \\
 
-  --logging_steps 5 
+&nbsp; --torch\_dtype bfloat16 \\               
 
-  --dataloader_num_workers 2 
+&nbsp; --deepspeed zero2 \\
 
-  --torch_dtype bfloat16                
 
-  --deepspeed zero2 
 
+&nbsp; # ✅ 输出日志（建议修改路径）
 
+&nbsp; 2>\&1 | tee /data/yiwei.ru/omniR1-sft-master/OmniCritic/logs/log\_file\_3b.txt   # ← ✅ 可替换为你本地的 logs 路径
 
-  # ✅ 输出日志（建议修改路径）
 
-  2>&1 | tee /data/yiwei.ru/omniR1-sft-master/OmniCritic/logs/log_file_3b.txt   # ← ✅ 可替换为你本地的 logs 路径
 
+\##6.运行grpo代码
 
 
-7.运行grpo代码
 
+bash scripts/grpo\_3b.sh
 
+bash scripts/grpo\_7b.sh
 
-bash scripts/grpo_3b.sh
 
-bash scripts/grpo_7b.sh
 
+export MAX\_PIXELS=262144                     
 
+export VIDEO\_MAX\_PIXELS=65536                
 
-export MAX_PIXELS=262144                     
+export NPROC\_PER\_NODE=4                       # ✅ 使用 GPU 数量（必须与 CUDA\_VISIBLE\_DEVICES 数量一致）
 
-export VIDEO_MAX_PIXELS=65536                
-
-export NPROC_PER_NODE=4                       # ✅ 使用 GPU 数量（必须与 CUDA_VISIBLE_DEVICES 数量一致）
-
-export CUDA_VISIBLE_DEVICES=0,1,2,3           # ✅ 设置实际可用显卡编号
+export CUDA\_VISIBLE\_DEVICES=0,1,2,3           # ✅ 设置实际可用显卡编号
 
 export FPS=1
 
-export FPS_MAX_FRAMES=20
+export FPS\_MAX\_FRAMES=20
 
-export AUDIO_MEMMAP=true
+export AUDIO\_MEMMAP=true
 
-export AUDIO_CHUNK_SIZE=4000
+export AUDIO\_CHUNK\_SIZE=4000
 
-export AUDIO_NUM_WORKERS=4
+export AUDIO\_NUM\_WORKERS=4
 
 
 
-swift rlhf 
+swift rlhf \\
 
-  --rlhf_type grpo 
+&nbsp; --rlhf\_type grpo \\
 
 
 
-  # ✅ 模型路径（替换为你自己的预训练模型，如 3B 或 7B）
+&nbsp; # ✅ 模型路径（替换为你自己的预训练模型，如 3B 或 7B）
 
-  --model /data/yiwei.ru/modelscope/Qwen/Qwen2.5-Omni-3B 
+&nbsp; --model /data/yiwei.ru/modelscope/Qwen/Qwen2.5-Omni-3B \\
 
-  --reward_funcs mm_format mm_content mm_rubric 
+&nbsp; --reward\_funcs mm\_format mm\_content mm\_rubric \\
 
-  --reward_weights 0.4 0.4 0.2 
+&nbsp; --reward\_weights 0.4 0.4 0.2 \\
 
-  --train_type lora 
+&nbsp; --train\_type lora \\
 
-  --lora_rank 8 
+&nbsp; --lora\_rank 8 \\
 
-  --lora_alpha 32 
+&nbsp; --lora\_alpha 32 \\
 
-  --target_modules all-linear 
+&nbsp; --target\_modules all-linear \\
 
-  --torch_dtype bfloat16                     
+&nbsp; --torch\_dtype bfloat16 \\                    
 
-  # ✅ 多模态 RL 数据路径（替换为你准备的 jsonl 文件）
+&nbsp; # ✅ 多模态 RL 数据路径（替换为你准备的 jsonl 文件）
 
-  --dataset 
+&nbsp; --dataset \\
 
-      /data/.../audio/final_final_rl_data.jsonl 
+&nbsp;     /data/.../audio/final\_final\_rl\_data.jsonl \\
 
-      /data/.../video/final_final_rl_data.jsonl 
+&nbsp;     /data/.../video/final\_final\_rl\_data.jsonl \\
 
-      /data/.../image/final_final_rl_data.jsonl 
+&nbsp;     /data/.../image/final\_final\_rl\_data.jsonl \\
 
 
 
-  # ✅ 外部插件：自定义奖励函数 / 数据解析（已经放在ms—swift-main的里面了，只改路径前缀就好）
+&nbsp; # ✅ 外部插件：自定义奖励函数 / 数据解析（已经放在ms—swift-main的里面了，只改路径前缀就好）
 
-  --external_plugins /path/to/new_plugin.py 
+&nbsp; --external\_plugins /path/to/new\_plugin.py \\
 
 
 
-  # 模型生成与训练参数
+&nbsp; # 模型生成与训练参数
 
-  --max_completion_length 2048 
+&nbsp; --max\_completion\_length 2048 \\
 
-  --num_train_epochs 1 
+&nbsp; --num\_train\_epochs 1 \\
 
-  --per_device_train_batch_size 1 
+&nbsp; --per\_device\_train\_batch\_size 1 \\
 
-  --per_device_eval_batch_size 1 
+&nbsp; --per\_device\_eval\_batch\_size 1 \\
 
-  --gradient_accumulation_steps 4 
+&nbsp; --gradient\_accumulation\_steps 4 \\
 
-  --learning_rate 1e-5 
+&nbsp; --learning\_rate 1e-5 \\
 
-  --eval_steps 100 
+&nbsp; --eval\_steps 100 \\
 
-  --save_steps 100 
+&nbsp; --save\_steps 100 \\
 
-  --save_total_limit 2 
+&nbsp; --save\_total\_limit 2 \\
 
-  --logging_steps 5 
+&nbsp; --logging\_steps 5 \\
 
-  --max_length 8192 
+&nbsp; --max\_length 8192 \\
 
 
 
-  # ✅ 输出路径（保存训练 checkpoint）（路径需改）
+&nbsp; # ✅ 输出路径（保存训练 checkpoint）（路径需改）
 
-  --output_dir /path/to/outputs/grpo 
+&nbsp; --output\_dir /path/to/outputs/grpo \\
 
 
 
-  --warmup_ratio 0.05 
+&nbsp; --warmup\_ratio 0.05 \\
 
-  --dataloader_num_workers 4 
+&nbsp; --dataloader\_num\_workers 4 \\
 
-  --dataset_num_proc 4 
+&nbsp; --dataset\_num\_proc 4 \\
 
-  --num_generations 4 
+&nbsp; --num\_generations 4 \\
 
-  --temperature 1.0 
+&nbsp; --temperature 1.0 \\
 
-  --top_p 0.99 
+&nbsp; --top\_p 0.99 \\
 
-  --top_k 50 
+&nbsp; --top\_k 50 \\
 
-  --lazy_tokenize false 
+&nbsp; --lazy\_tokenize false \\
 
-  --system /path/to/prompt.txt 
+&nbsp; --system /path/to/prompt.txt \\
 
-  --deepspeed zero2 
+&nbsp; --deepspeed zero2 \\
 
 
 
-  --log_completions true 
+&nbsp; --log\_completions true \\
 
 
 
-  # ✅ 保存完整训练日志（需改路径）
+&nbsp; # ✅ 保存完整训练日志（需改路径）
 
-  2>&1 | tee /path/to/logs/log_file_grpo_3b.txt
+&nbsp; 2>\&1 | tee /path/to/logs/log\_file\_grpo\_3b.txt
 
